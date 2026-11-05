@@ -1,9 +1,9 @@
 // =============================================================================
-// OperacionesNuevas.sc  —  Parte 4 (Scala 3)
+// OperacionesNuevas.sc - Parte 4 (Scala 3)
 // Cuatro operaciones que NO se vieron en clase: sortBy, groupBy, partition, find
 // y una combinación de operaciones nuevas con operaciones vistas en clase.
 //
-// Worksheet de IntelliJ: abrir el archivo y pulsar ▶ (Evaluate Worksheet)
+// Worksheet de IntelliJ: abrir el archivo y pulsar el botón de ejecutar (Evaluate Worksheet)
 // o en consola:  scala-cli run operaciones/OperacionesNuevas.sc
 // =============================================================================
 
@@ -29,14 +29,14 @@ val productos: List[Producto] = List(
 
 def f2(x: Double): String = String.format(java.util.Locale.US, "%.2f", x)
 
-// FICHA 1 — sortBy (Ordenar)
+// FICHA 1: sortBy (Ordenar)
 // La lambda devuelve la CLAVE por la que se ordena (de menor a mayor).
 // Con el signo menos (-p.precio) se ordena de mayor a menor.
 println("=== FICHA 1: sortBy ===")
 val porPrecio = productos.sortBy(p => -p.precio)
 porPrecio.take(5).foreach(p => println(s"  ${f2(p.precio)}  ${p.nombre}"))
 
-// FICHA 2 — groupBy (Agrupar)
+// FICHA 2: groupBy (Agrupar)
 // La lambda devuelve la CLAVE del grupo. Resultado: un Map (clave -> lista).
 // Cada grupo es una tupla: g._1 es la clave y g._2 la lista de productos.
 println("=== FICHA 2: groupBy ===")
@@ -44,7 +44,7 @@ val porCategoria = productos.groupBy(p => p.categoria)
 porCategoria.toList.sortBy(g => g._1)
   .foreach(g => println(s"  ${g._1}: ${g._2.size} productos"))
 
-// FICHA 3 — partition (Dividir)
+// FICHA 3: partition (Dividir)
 // La lambda es una condición. Devuelve una tupla de dos listas:
 // (los que cumplen, los que no cumplen).
 println("=== FICHA 3: partition ===")
@@ -52,7 +52,7 @@ val (disponibles, agotados) = productos.partition(p => p.stock > 0)
 println(s"  Disponibles: ${disponibles.size}")
 println(s"  Agotados: ${agotados.map(p => p.nombre).mkString(", ")}")
 
-// FICHA 4 — find (Buscar)
+// FICHA 4: find (Buscar)
 // La lambda es una condición. Devuelve el PRIMER elemento que la cumple
 // dentro de Some(...), o None si ninguno la cumple.
 println("=== FICHA 4: find ===")

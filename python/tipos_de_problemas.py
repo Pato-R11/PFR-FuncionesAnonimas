@@ -1,5 +1,5 @@
 # =============================================================================
-# tipos_de_problemas.py  —  Parte 3 (Python 3.8 o superior)
+# tipos_de_problemas.py - Parte 3 (Python 3.8 o superior)
 # Los 7 tipos de problemas resueltos con lambda.
 #
 # Ejecutar:  python python/tipos_de_problemas.py

@@ -1,9 +1,9 @@
 // =============================================================================
-// TiposDeProblemas.sc  —  Parte 3 (Scala 3)
+// TiposDeProblemas.sc - Parte 3 (Scala 3)
 // Los 7 tipos de problemas resueltos con funciones anónimas sobre UNA lista
 // de productos.
 //
-// Worksheet de IntelliJ: abrir el archivo y pulsar ▶ (Evaluate Worksheet)
+// Worksheet de IntelliJ: abrir el archivo y pulsar el botón de ejecutar (Evaluate Worksheet)
 // o en consola:  scala-cli run scala/TiposDeProblemas.sc
 // =============================================================================
 

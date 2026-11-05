@@ -1,6 +1,7 @@
-# Funciones Anónimas — Trabajo de Consulta
+# Funciones Anónimas: Trabajo de Consulta
 
-**Materia:** Programación Funcional y Reactiva · **Lenguajes:** Scala · Java · Python  
+**Materia:** Programación Funcional y Reactiva  
+**Lenguajes:** Scala, Java y Python  
 **Autor:** Patricio Alexander Rivas Reinoso  
 **Entrega:** Semana 5
 
@@ -13,15 +14,15 @@
 - [Estructura del repositorio](#estructura)
 - [Cómo ejecutar el código](#ejecutar)
 - [Datos usados en todos los ejemplos](#datos)
-- [Parte 1 – Explorar: la programación funcional en el mundo real](#parte-1)
+- [Parte 1. Explorar: la programación funcional en el mundo real](#parte-1)
   - [Caso 1: Apache Spark](#caso-spark)
   - [Caso 2: Twitter y *Effective Scala*](#caso-twitter)
-- [Parte 2 – Entender: ¿qué es una función anónima?](#parte-2)
-- [Parte 3 – Aplicar: ¿en qué problemas sirven las funciones anónimas?](#parte-3)
+- [Parte 2. Entender: ¿qué es una función anónima?](#parte-2)
+- [Parte 3. Aplicar: ¿en qué problemas sirven las funciones anónimas?](#parte-3)
   - [3.1 Catálogo de tipos de problemas](#p3-catalogo)
-  - [1. Selección](#p3-seleccion) · [2. Transformación](#p3-transformacion) · [3. Validación](#p3-validacion) · [4. Conteo](#p3-conteo) · [5. Extremos](#p3-extremos) · [6. Aplanamiento](#p3-aplanamiento) · [7. Acumulación](#p3-acumulacion)
-- [Parte 4 – Ampliar: cuatro operaciones nuevas](#parte-4)
-- [Parte 5 – Comparar y concluir](#parte-5)
+  - [1. Selección](#p3-seleccion) | [2. Transformación](#p3-transformacion) | [3. Validación](#p3-validacion) | [4. Conteo](#p3-conteo) | [5. Extremos](#p3-extremos) | [6. Aplanamiento](#p3-aplanamiento) | [7. Acumulación](#p3-acumulacion)
+- [Parte 4. Ampliar: cuatro operaciones nuevas](#parte-4)
+- [Parte 5. Comparar y concluir](#parte-5)
 - [Referencias](#referencias)
 
 ---
@@ -50,10 +51,10 @@ Cada archivo funciona solo: ya trae la `case class Producto` y la lista de produ
 
 | Archivo | Requisito | Cómo ejecutarlo |
 |---|---|---|
-| `scala/TiposDeProblemas.sc` | Scala 3 | En IntelliJ: abrir el worksheet y pulsar ▶ (*Evaluate Worksheet*). En consola: `scala-cli run scala/TiposDeProblemas.sc` |
+| `scala/TiposDeProblemas.sc` | Scala 3 | En IntelliJ: abrir el worksheet y pulsar el botón de ejecutar (*Evaluate Worksheet*). En consola: `scala-cli run scala/TiposDeProblemas.sc` |
 | `java/TiposDeProblemas.java` | JDK 17 o superior | `java java/TiposDeProblemas.java` |
 | `python/tipos_de_problemas.py` | Python 3.8 o superior | `python python/tipos_de_problemas.py` |
-| `operaciones/OperacionesNuevas.sc` | Scala 3 | En IntelliJ: abrir el worksheet y pulsar ▶ (*Evaluate Worksheet*). En consola: `scala-cli run operaciones/OperacionesNuevas.sc` |
+| `operaciones/OperacionesNuevas.sc` | Scala 3 | En IntelliJ: abrir el worksheet y pulsar el botón de ejecutar (*Evaluate Worksheet*). En consola: `scala-cli run operaciones/OperacionesNuevas.sc` |
 
 > Las tres versiones de la Parte 3 muestran **exactamente la misma salida**. Para eso, los precios se imprimen con 2 decimales y con punto (no coma), y en Python `True/False` se pasa a minúsculas.
 
@@ -88,7 +89,7 @@ En Java se usa un `record Producto(...)` y en Python una `@dataclass`. Las dos, 
 ---
 
 <a id="parte-1"></a>
-## Parte 1 – Explorar: la programación funcional en el mundo real
+## Parte 1. Explorar: la programación funcional en el mundo real
 
 <a id="caso-spark"></a>
 ### Caso 1: Apache Spark
@@ -98,7 +99,7 @@ En Java se usa un `record Producto(...)` y en Python una `@dataclass`. Las dos, 
 | **Qué problema resuelve** | Procesar cantidades enormes de datos (registros de páginas web, transacciones, etc.) que no caben en una sola computadora, repartiendo el trabajo entre muchas máquinas. |
 | **Lenguaje / herramienta** | Spark está escrito en **Scala**, y también se puede usar desde Java y Python. |
 | **Ventaja del enfoque funcional** | El programador no escribe ciclos: le pasa a Spark lambdas con lo que hay que hacer con cada dato (`map`, `filter`, `flatMap`, `reduce`). Como esas lambdas son funciones puras (no cambian variables de afuera), Spark puede ejecutarlas al mismo tiempo en muchas máquinas sin que se estorben. |
-| **Fuente** | Documentación oficial: *Spark Quick Start* — https://spark.apache.org/docs/latest/quick-start.html |
+| **Fuente** | Documentación oficial: *Spark Quick Start* - https://spark.apache.org/docs/latest/quick-start.html |
 
 **Fragmento de código real** (de la guía *Quick Start* de Spark):
 
@@ -125,7 +126,7 @@ Este ejemplo inspiró el problema de [aplanamiento](#p3-aplanamiento) de la Part
 | **Qué problema resuelve** | Atender millones de usuarios con muchos servicios que trabajan juntos (publicar tweets, mostrar el timeline, buscar, etc.). |
 | **Lenguaje / herramienta** | **Scala**. Twitter publicó su guía interna de buenas prácticas, llamada *Effective Scala*. |
 | **Ventaja del enfoque funcional** | La guía recomienda trabajar con valores inmutables y transformarlos con funciones en lugar de modificarlos. Así el código es más fácil de entender, y varios procesos pueden usar los mismos datos al mismo tiempo sin peligro de que alguien los cambie. |
-| **Fuente** | Eriksen, M. *Effective Scala*, Twitter — https://twitter.github.io/effectivescala/ |
+| **Fuente** | Eriksen, M. *Effective Scala*, Twitter - https://twitter.github.io/effectivescala/ |
 
 **Fragmento de código real** (sección *Collections* de *Effective Scala*):
 
@@ -147,12 +148,12 @@ Al ejecutarlo se obtiene `List((scala,12), (python,10), (java,4))`.
 2. `map` recorre cada grupo y, con `foldLeft`, suma las cantidades (`_._2`, el segundo elemento).
 3. `sortBy(_._2)` ordena por total y `reverse` deja primero al más votado.
 
-Es el mismo patrón agrupar → sumar → ordenar que uso en la [combinación de la Parte 4](#p4-combinacion).
+Es el mismo patrón agrupar, sumar y ordenar que uso en la [combinación de la Parte 4](#p4-combinacion).
 
 ---
 
 <a id="parte-2"></a>
-## Parte 2 – Entender: ¿qué es una función anónima?
+## Parte 2. Entender: ¿qué es una función anónima?
 
 ### 2.1 ¿Qué es una función anónima y de dónde viene el nombre *lambda*?
 
@@ -210,7 +211,7 @@ La lambda no recibe `iva` como parámetro: lo "toma" de afuera y lo recuerda. Co
 ---
 
 <a id="parte-3"></a>
-## Parte 3 – Aplicar: ¿en qué problemas sirven las funciones anónimas?
+## Parte 3. Aplicar: ¿en qué problemas sirven las funciones anónimas?
 
 Se resolvieron **los 7 tipos de problemas** con la lista de [productos](#datos). El código completo está en [`scala/TiposDeProblemas.sc`](scala/TiposDeProblemas.sc), [`java/TiposDeProblemas.java`](java/TiposDeProblemas.java) y [`python/tipos_de_problemas.py`](python/tipos_de_problemas.py). Aquí se muestra solo la parte principal de cada solución.
 
@@ -227,12 +228,12 @@ Se resolvieron **los 7 tipos de problemas** con la lista de [productos](#datos).
 | 6 | [Aplanamiento](#p3-aplanamiento) | ¿Cómo junto en una lista lo que da cada elemento? | `flatMap` | `flatMap` | `reduce` |
 | 7 | [Acumulación](#p3-acumulacion) | ¿Qué valor resume toda la lista? | `foldLeft`, `scanLeft` | `reduce` | `reduce`, `accumulate` |
 
-Capturas de la ejecución completa: [Scala](img/parte3_scala_completa.png) · [Java](img/parte3_java_completa.png) · [Python](img/parte3_python_completa.png).
+Capturas de la ejecución completa: [Scala](img/parte3_scala_completa.png) | [Java](img/parte3_java_completa.png) | [Python](img/parte3_python_completa.png).
 
 ---
 
 <a id="p3-seleccion"></a>
-### 1. Selección — `filter`
+### 1. Selección: `filter`
 
 **Situación real:** el encargado de bodega necesita saber qué productos tienen **menos de 10 unidades** para pedirlos al proveedor.
 
@@ -270,7 +271,7 @@ stock_bajo = list(filter(lambda p: p.stock < 10, productos))
 ---
 
 <a id="p3-transformacion"></a>
-### 2. Transformación — `map`
+### 2. Transformación: `map`
 
 **Situación real:** en *Black Friday* todo tiene **20 % de descuento** y la página web debe mostrar el precio normal y el precio final de cada producto.
 
@@ -318,7 +319,7 @@ con_descuento = list(map(lambda p: f"{p.nombre}: {f2(p.precio)} -> {f2(p.precio 
 ---
 
 <a id="p3-validacion"></a>
-### 3. Validación — `exists` / `forall`
+### 3. Validación: `exists` / `forall`
 
 **Situación real:** antes de publicar el catálogo en la tienda en línea se revisa si **hay productos agotados** y si **todos tienen un precio mayor que cero**. También se pregunta si hay algún producto de Hogar de más de $200.
 
@@ -357,7 +358,7 @@ hogar_caro      = any(map(lambda p: p.categoria == "Hogar" and p.precio > 200, p
 ---
 
 <a id="p3-conteo"></a>
-### 4. Conteo — `count`
+### 4. Conteo: `count`
 
 **Situación real:** el gerente quiere saber **cuántos productos de Tecnología cuestan más de $50** para organizar la vitrina.
 
@@ -390,9 +391,9 @@ tecno_caros = len(list(filter(lambda p: p.categoria == "Tecnologia" and p.precio
 ---
 
 <a id="p3-extremos"></a>
-### 5. Extremos — `maxBy` / `minBy`
+### 5. Extremos: `maxBy` / `minBy`
 
-**Situación real:** se quiere saber qué producto tiene **más dinero guardado en bodega** (precio × stock) para asegurarlo, y cuál es el **más barato** para usarlo en una promoción.
+**Situación real:** se quiere saber qué producto tiene **más dinero guardado en bodega** (precio x stock) para asegurarlo, y cuál es el **más barato** para usarlo en una promoción.
 
 ```scala
 // Scala
@@ -429,7 +430,7 @@ mas_barato       = min(productos, key=lambda p: p.precio)
 ---
 
 <a id="p3-aplanamiento"></a>
-### 6. Aplanamiento — `flatMap`
+### 6. Aplanamiento: `flatMap`
 
 **Situación real:** el buscador de la tienda necesita una **lista de palabras clave** sacadas de los nombres de los productos. Cada producto da *varias* palabras y todas deben quedar en una sola lista (como en el ejemplo de [Spark](#caso-spark)).
 
@@ -465,9 +466,9 @@ Si se usara `map` en vez de `flatMap`, el resultado sería una lista de 14 lista
 ---
 
 <a id="p3-acumulacion"></a>
-### 7. Acumulación — `foldLeft` / `scanLeft`
+### 7. Acumulación: `foldLeft` / `scanLeft`
 
-**Situación real:** contabilidad necesita el **valor total del inventario** (suma de precio × stock) y también quiere ver **cómo va creciendo ese total** producto por producto.
+**Situación real:** contabilidad necesita el **valor total del inventario** (suma de precio x stock) y también quiere ver **cómo va creciendo ese total** producto por producto.
 
 ```scala
 // Scala
@@ -507,7 +508,7 @@ El último número de `scanLeft` es igual al resultado de `foldLeft`. Los númer
 ---
 
 <a id="parte-4"></a>
-## Parte 4 – Ampliar: cuatro operaciones nuevas
+## Parte 4. Ampliar: cuatro operaciones nuevas
 
 Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc), con la misma lista de [productos](#datos).
 
@@ -516,13 +517,13 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
 | Familia | Operación | ¿Qué devuelve? |
 |---|---|---|
 | Ordenar | `sortBy` | Una lista nueva ordenada |
-| Agrupar | `groupBy` | Un `Map` (clave → lista de elementos) |
+| Agrupar | `groupBy` | Un `Map` (cada clave con su lista de elementos) |
 | Dividir una lista | `partition` | Una tupla con dos listas |
 | Buscar | `find` | `Some(elemento)` o `None` |
 
 ### 4.2 Fichas
 
-#### Ficha 1 — `sortBy`
+#### Ficha 1: `sortBy`
 
 1. **Qué hace:** ordena la lista de menor a mayor según un valor que calcula la lambda. Es parecido a `sorted`, visto en clase, pero con `sortBy` uno elige por qué campo ordenar.
 2. **Qué lambda recibe:** una que devuelve la **clave** para ordenar: `p => p.precio`. Con el signo menos (`p => -p.precio`) se ordena de mayor a menor.
@@ -540,7 +541,7 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
    ```
 4. **Qué problema resuelve:** mostrar productos "de mayor a menor precio" o hacer un top 5. Se parece a [Extremos](#p3-extremos): `maxBy` da solo el mayor y `sortBy` ordena toda la lista.
 
-#### Ficha 2 — `groupBy`
+#### Ficha 2: `groupBy`
 
 1. **Qué hace:** separa los elementos en grupos según una clave.
 2. **Qué lambda recibe:** una que devuelve la **clave del grupo**: `p => p.categoria`. Devuelve un `Map` donde cada categoría tiene su lista de productos. Al recorrerlo, cada grupo es una tupla: `g._1` es la categoría y `g._2` la lista.
@@ -558,7 +559,7 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
    ```
 4. **Qué problema resuelve:** reportes por categoría, por mes o por ciudad. Es un tipo de problema nuevo (**Agrupación**) que no estaba en la tabla de la Parte 3.
 
-#### Ficha 3 — `partition`
+#### Ficha 3: `partition`
 
 1. **Qué hace:** divide la lista en dos: los que cumplen la condición y los que no.
 2. **Qué lambda recibe:** una condición (devuelve `Boolean`): `p => p.stock > 0`. Devuelve una **tupla** `(cumplen, noCumplen)` que se puede separar en dos `val`, como se vio en clase con `val (menor, mayor) = ...`.
@@ -572,7 +573,7 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
    ```
 4. **Qué problema resuelve:** separar aprobados y reprobados, pagos aceptados y rechazados, etc. Es como [Selección](#p3-seleccion) (`filter`), pero sin perder los que no cumplen.
 
-#### Ficha 4 — `find`
+#### Ficha 4: `find`
 
 1. **Qué hace:** busca el **primer** elemento que cumple una condición.
 2. **Qué lambda recibe:** una condición: `p => p.categoria == "Ropa" && p.precio < 20`. Si lo encuentra devuelve `Some(elemento)`, y si no hay ninguno devuelve `None` (así no hay error cuando no existe).
@@ -594,7 +595,7 @@ Captura de la ejecución de la Parte 4:
 <a id="p4-combinacion"></a>
 ### 4.3 Combinar operaciones
 
-**Pregunta:** *¿qué categoría tiene más dinero en bodega (precio × stock)?*
+**Pregunta:** *¿qué categoría tiene más dinero en bodega (precio x stock)?*
 
 ```scala
 val ranking = productos
@@ -617,7 +618,7 @@ Alimentos: 891.00
 
 1. **`groupBy` (nueva):** junta los productos por categoría (4 grupos).
 2. **`toList`:** convierte el `Map` en una lista de tuplas `(categoria, productos)` para poder ordenarla.
-3. **`map` + `foldLeft` (vistas en clase):** cada tupla se convierte en `(categoria, valor total)`. `foldLeft` suma precio × stock de los productos de ese grupo.
+3. **`map` + `foldLeft` (vistas en clase):** cada tupla se convierte en `(categoria, valor total)`. `foldLeft` suma precio x stock de los productos de ese grupo.
 4. **`sortBy` (nueva):** ordena por el valor total (`t._2`) de mayor a menor, gracias al signo menos.
 
 Resultado: Tecnología es la categoría con más dinero en bodega. Se usaron **dos operaciones nuevas** (`groupBy`, `sortBy`) y **dos vistas en clase** (`map`, `foldLeft`).
@@ -625,7 +626,7 @@ Resultado: Tecnología es la categoría con más dinero en bodega. Se usaron **d
 ---
 
 <a id="parte-5"></a>
-## Parte 5 – Comparar y concluir
+## Parte 5. Comparar y concluir
 
 ### 5.1 Scala, Java y Python frente a frente
 
@@ -640,7 +641,7 @@ Comparación basada en las soluciones de la [Parte 3](#parte-3).
 | **Legibilidad (mi opinión)** | La más clara: el código se lee casi como la pregunta. | Se entiende, pero es más largo por `stream()`, `toList()` y los paréntesis de `p.precio()`. | Muy clara en casos simples como `max(..., key=...)`, pero `len(list(filter(lambda ...)))` se lee de adentro hacia afuera. |
 
 **¿En qué lenguaje fue más natural resolver los problemas?**
-En **Scala**. Todas las operaciones que vimos en clase existen con el mismo nombre directamente en `List`, así que cada problema se resolvió en una línea con una lambda corta. En Java hubo que cambiar algunos nombres (`exists` → `anyMatch`) y en Python combinar funciones (por ejemplo `len(list(filter(...)))` para contar).
+En **Scala**. Todas las operaciones que vimos en clase existen con el mismo nombre directamente en `List`, así que cada problema se resolvió en una línea con una lambda corta. En Java hubo que cambiar algunos nombres (`exists` pasa a ser `anyMatch`) y en Python combinar funciones (por ejemplo `len(list(filter(...)))` para contar).
 
 **¿En qué tipo de problema hubo más diferencias y por qué?**
 En la **[Acumulación](#p3-acumulacion)**. En Scala, `foldLeft` y `scanLeft` ya existen. En Python existen como `reduce` y `accumulate`, pero hay que importarlos. En **Java no existe `scanLeft`**: tuve que armarlo sumando, para cada posición, los primeros valores de la lista con `reduce`. También hubo diferencias en el **[Aplanamiento](#p3-aplanamiento)**: en Java la lambda de `flatMap` debe devolver un `Stream`, y Python no tiene `flatMap`, así que usé `reduce` para ir juntando las listas.
@@ -656,11 +657,11 @@ Esto es justamente lo que aprovecha **[Apache Spark](#caso-spark)**: como las la
 <a id="referencias"></a>
 ## Referencias
 
-1. Apache Software Foundation. *Quick Start — Spark Documentation*. https://spark.apache.org/docs/latest/quick-start.html
+1. Apache Software Foundation. *Quick Start, Spark Documentation*. https://spark.apache.org/docs/latest/quick-start.html
 2. Eriksen, M. *Effective Scala*. Twitter. https://twitter.github.io/effectivescala/
 3. Quiñones, S. *B1S2 Funciones*, *B1S3 Funciones de orden superior* y *B1S4 Estructuras de datos* [Diapositivas de clase]. UTPL. https://slides.com/lsantiago
 4. Documentación oficial de Scala 3. https://docs.scala-lang.org
-5. Oracle. *Lambda Expressions — The Java Tutorials*. https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html
+5. Oracle. *Lambda Expressions, The Java Tutorials*. https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html
 6. Python Software Foundation. *Functional Programming HOWTO*. https://docs.python.org/3/howto/functional.html
 7. Alama, J. y Korbmacher, J. *The Lambda Calculus*. Stanford Encyclopedia of Philosophy. https://plato.stanford.edu/entries/lambda-calculus/
 8. Winitzki, S. (2024). *The Science of Functional Programming*. https://github.com/winitzki/sofp

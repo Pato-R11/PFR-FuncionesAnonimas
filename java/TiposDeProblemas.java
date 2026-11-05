@@ -1,5 +1,5 @@
 // =============================================================================
-// TiposDeProblemas.java  —  Parte 3 (Java 17 o superior)
+// TiposDeProblemas.java - Parte 3 (Java 17 o superior)
 // Los 7 tipos de problemas resueltos con lambdas ( p -> ... ) y Streams.
 //
 // Ejecutar:  java java/TiposDeProblemas.java
