@@ -33,27 +33,27 @@
 PFR-FuncionesAnonimas/
 ├── README.md                       <- documento principal (partes 1 a 5)
 ├── scala/
-│   └── TiposDeProblemas.scala      <- Parte 3: los 7 tipos de problemas en Scala
+│   └── TiposDeProblemas.sc         <- Parte 3: los 7 tipos de problemas en Scala (worksheet)
 ├── java/
 │   └── TiposDeProblemas.java       <- Parte 3: los 7 tipos de problemas en Java
 ├── python/
 │   └── tipos_de_problemas.py       <- Parte 3: los 7 tipos de problemas en Python
 ├── operaciones/
-│   └── OperacionesNuevas.scala     <- Parte 4: sortBy, groupBy, partition, find
+│   └── OperacionesNuevas.sc        <- Parte 4: sortBy, groupBy, partition, find (worksheet)
 └── img/                            <- capturas de ejecución
 ```
 
 <a id="ejecutar"></a>
 ## Cómo ejecutar el código
 
-Cada archivo funciona solo: ya trae la `case class Producto` y la lista de productos.
+Cada archivo funciona solo: ya trae la `case class Producto` y la lista de productos. Los archivos de Scala son **worksheets (`.sc`)**, como en clase: el código se escribe directo, sin `main`.
 
 | Archivo | Requisito | Cómo ejecutarlo |
 |---|---|---|
-| `scala/TiposDeProblemas.scala` | Scala 3 | En IntelliJ: botón ▶ junto a `@main`. En consola: `scala-cli run scala/TiposDeProblemas.scala` |
+| `scala/TiposDeProblemas.sc` | Scala 3 | En IntelliJ: abrir el worksheet y pulsar ▶ (*Evaluate Worksheet*). En consola: `scala-cli run scala/TiposDeProblemas.sc` |
 | `java/TiposDeProblemas.java` | JDK 17 o superior | `java java/TiposDeProblemas.java` |
 | `python/tipos_de_problemas.py` | Python 3.8 o superior | `python python/tipos_de_problemas.py` |
-| `operaciones/OperacionesNuevas.scala` | Scala 3 | En IntelliJ: botón ▶ junto a `@main`. En consola: `scala-cli run operaciones/OperacionesNuevas.scala` |
+| `operaciones/OperacionesNuevas.sc` | Scala 3 | En IntelliJ: abrir el worksheet y pulsar ▶ (*Evaluate Worksheet*). En consola: `scala-cli run operaciones/OperacionesNuevas.sc` |
 
 > Las tres versiones de la Parte 3 muestran **exactamente la misma salida**. Para eso, los precios se imprimen con 2 decimales y con punto (no coma), y en Python `True/False` se pasa a minúsculas.
 
@@ -212,7 +212,7 @@ La lambda no recibe `iva` como parámetro: lo "toma" de afuera y lo recuerda. Co
 <a id="parte-3"></a>
 ## Parte 3 – Aplicar: ¿en qué problemas sirven las funciones anónimas?
 
-Se resolvieron **los 7 tipos de problemas** con la lista de [productos](#datos). El código completo está en [`scala/TiposDeProblemas.scala`](scala/TiposDeProblemas.scala), [`java/TiposDeProblemas.java`](java/TiposDeProblemas.java) y [`python/tipos_de_problemas.py`](python/tipos_de_problemas.py). Aquí se muestra solo la parte principal de cada solución.
+Se resolvieron **los 7 tipos de problemas** con la lista de [productos](#datos). El código completo está en [`scala/TiposDeProblemas.sc`](scala/TiposDeProblemas.sc), [`java/TiposDeProblemas.java`](java/TiposDeProblemas.java) y [`python/tipos_de_problemas.py`](python/tipos_de_problemas.py). Aquí se muestra solo la parte principal de cada solución.
 
 <a id="p3-catalogo"></a>
 ### 3.1 Catálogo de tipos de problemas
@@ -509,7 +509,7 @@ El último número de `scanLeft` es igual al resultado de `foldLeft`. Los númer
 <a id="parte-4"></a>
 ## Parte 4 – Ampliar: cuatro operaciones nuevas
 
-Código: [`operaciones/OperacionesNuevas.scala`](operaciones/OperacionesNuevas.scala), con la misma lista de [productos](#datos).
+Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc), con la misma lista de [productos](#datos).
 
 ### 4.1 Operaciones elegidas
 
