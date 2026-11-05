@@ -1,19 +1,16 @@
 # =============================================================================
-# tipos_de_problemas.py — Parte 3: los 7 tipos de problemas resueltos con
-# lambda y las funciones de orden superior de Python.
+# tipos_de_problemas.py  —  Parte 3 (Python 3.8 o superior)
+# Los 7 tipos de problemas resueltos con lambda.
 #
-# Requisitos: Python 3.8 o superior (usa dataclasses e itertools.accumulate
-# con el parámetro `initial`).
-# Ejecutar (desde la raíz del repositorio):
-#   python python/tipos_de_problemas.py
+# Ejecutar:  python python/tipos_de_problemas.py
 # =============================================================================
 
 from dataclasses import dataclass
 from functools import reduce
-from itertools import accumulate, chain
+from itertools import accumulate
 
 
-@dataclass(frozen=True)  # frozen=True -> inmutable, como la case class de Scala
+@dataclass(frozen=True)  # frozen=True -> no se puede modificar (inmutable)
 class Producto:
     nombre: str
     categoria: str
@@ -21,7 +18,6 @@ class Producto:
     stock: int
 
 
-# Los mismos 14 productos de scala/Producto.scala y java/TiposDeProblemas.java
 productos = [
     Producto("Laptop Gamer X15",       "Tecnologia", 1250.00,   5),
     Producto("Mouse Inalambrico",      "Tecnologia",   18.50,  40),
@@ -40,59 +36,40 @@ productos = [
 ]
 
 
-def f2(x: float) -> str:
-    """2 decimales con punto, igual que String.format(Locale.US, "%.2f") en Scala/Java."""
+def f2(x):
+    """Muestra un número con 2 decimales."""
     return f"{x:.2f}"
 
 
-def b(valor: bool) -> str:
-    """Python imprime True/False; Scala y Java imprimen true/false."""
-    return str(valor).lower()
-
-
-# -----------------------------------------------------------------------------
-# 1. SELECCIÓN — filter
-# Lambda: Producto -> bool
-# -----------------------------------------------------------------------------
+# 1. SELECCIÓN (filter)
 print("=== 1. SELECCION (filter) ===")
 stock_bajo = list(filter(lambda p: p.stock < 10, productos))
 for p in stock_bajo:
     print(f"  - {p.nombre} ({p.stock} u.)")
 
-# -----------------------------------------------------------------------------
-# 2. TRANSFORMACIÓN — map
-# Lambda: Producto -> str
-# -----------------------------------------------------------------------------
+# 2. TRANSFORMACIÓN (map)
 print("=== 2. TRANSFORMACION (map) ===")
 con_descuento = list(map(lambda p: f"{p.nombre}: {f2(p.precio)} -> {f2(p.precio * 0.8)}", productos))
 for linea in con_descuento:
     print(f"  {linea}")
 
-# -----------------------------------------------------------------------------
-# 3. VALIDACIÓN — any (exists) / all (forall)
-# any/all no reciben una lambda directamente: reciben un iterable de bool,
-# así que la lambda se aplica con map().
-# -----------------------------------------------------------------------------
+# 3. VALIDACIÓN: en Python exists = any, forall = all
+#    any/all reciben valores True/False, por eso primero se aplica la lambda con map
 print("=== 3. VALIDACION (exists / forall) ===")
 hay_agotados    = any(map(lambda p: p.stock == 0, productos))
 precios_validos = all(map(lambda p: p.precio > 0, productos))
 hogar_caro      = any(map(lambda p: p.categoria == "Hogar" and p.precio > 200, productos))
-print(f"  Hay algun producto agotado?        {b(hay_agotados)}")
-print(f"  Todos tienen precio > 0?           {b(precios_validos)}")
-print(f"  Hay algun producto de Hogar > 200? {b(hogar_caro)}")
+# .lower() para que salga true/false igual que en Scala y Java
+print(f"  Hay algun producto agotado?        {str(hay_agotados).lower()}")
+print(f"  Todos tienen precio > 0?           {str(precios_validos).lower()}")
+print(f"  Hay algun producto de Hogar > 200? {str(hogar_caro).lower()}")
 
-# -----------------------------------------------------------------------------
-# 4. CONTEO — no existe count(predicado): se cuenta lo que deja pasar filter
-# Lambda: Producto -> bool
-# -----------------------------------------------------------------------------
+# 4. CONTEO: no hay count con lambda, se cuenta lo que deja pasar filter
 print("=== 4. CONTEO (count) ===")
 tecno_caros = len(list(filter(lambda p: p.categoria == "Tecnologia" and p.precio > 50, productos)))
 print(f"  Productos de Tecnologia con precio > 50: {tecno_caros}")
 
-# -----------------------------------------------------------------------------
-# 5. EXTREMOS — max / min con key=lambda
-# Lambda: Producto -> float (criterio de comparación)
-# -----------------------------------------------------------------------------
+# 5. EXTREMOS: max/min con key=lambda (el criterio)
 print("=== 5. EXTREMOS (maxBy / minBy) ===")
 mayor_inventario = max(productos, key=lambda p: p.precio * p.stock)
 mas_barato = min(productos, key=lambda p: p.precio)
@@ -100,19 +77,14 @@ print(f"  Mayor valor en inventario: {mayor_inventario.nombre} "
       f"({f2(mayor_inventario.precio * mayor_inventario.stock)})")
 print(f"  Producto mas barato:       {mas_barato.nombre} ({f2(mas_barato.precio)})")
 
-# -----------------------------------------------------------------------------
-# 6. APLANAMIENTO — Python no tiene flatMap: se combina map (con la lambda)
-# + itertools.chain.from_iterable (que aplana). Lambda: Producto -> list[str]
-# -----------------------------------------------------------------------------
+# 6. APLANAMIENTO: Python no tiene flatMap. Se usa reduce (como foldLeft)
+#    juntando la lista acumulada con las palabras de cada producto
 print("=== 6. APLANAMIENTO (flatMap) ===")
-palabras = list(chain.from_iterable(map(lambda p: p.nombre.lower().split(" "), productos)))
+palabras = reduce(lambda acc, p: acc + p.nombre.lower().split(" "), productos, [])
 print(f"  Total de palabras: {len(palabras)}")
 print(f"  {', '.join(palabras)}")
 
-# -----------------------------------------------------------------------------
-# 7. ACUMULACIÓN — functools.reduce (foldLeft) / itertools.accumulate (scanLeft)
-# Lambda: (acumulador, producto) -> nuevo acumulador
-# -----------------------------------------------------------------------------
+# 7. ACUMULACIÓN: reduce = foldLeft, accumulate = scanLeft
 print("=== 7. ACUMULACION (foldLeft / scanLeft) ===")
 total = reduce(lambda acc, p: acc + p.precio * p.stock, productos, 0.0)
 print(f"  Valor total del inventario: {f2(total)}")

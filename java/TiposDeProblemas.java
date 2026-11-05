@@ -1,27 +1,22 @@
 // =============================================================================
-// TiposDeProblemas.java — Parte 3: los 7 tipos de problemas resueltos con
-// expresiones lambda y la API de Streams de Java.
+// TiposDeProblemas.java  —  Parte 3 (Java 17 o superior)
+// Los 7 tipos de problemas resueltos con lambdas ( p -> ... ) y Streams.
 //
-// Requisitos: JDK 17 o superior (usa `record`).
-// Ejecutar (desde la raíz del repositorio), sin compilar aparte:
-//   java java/TiposDeProblemas.java
-// o de la forma clásica:
-//   javac -d out java/TiposDeProblemas.java && java -cp out TiposDeProblemas
+// Ejecutar:  java java/TiposDeProblemas.java
 // =============================================================================
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TiposDeProblemas {
 
-    // Misma estructura que la case class de Scala: un record es inmutable.
+    // record = clase inmutable con sus campos (parecido a la case class de Scala)
     record Producto(String nombre, String categoria, double precio, int stock) {}
 
-    // Los mismos 14 productos de scala/Producto.scala y python/tipos_de_problemas.py
-    static final List<Producto> productos = List.of(
+    static List<Producto> productos = List.of(
         new Producto("Laptop Gamer X15",       "Tecnologia", 1250.00,   5),
         new Producto("Mouse Inalambrico",      "Tecnologia",   18.50,  40),
         new Producto("Monitor Curvo 27",       "Tecnologia",  289.99,  12),
@@ -38,37 +33,28 @@ public class TiposDeProblemas {
         new Producto("Zapatos Deportivos",     "Ropa",         89.99,   0)
     );
 
-    // 2 decimales con punto (Locale.US) para que la salida coincida con Scala y Python.
+    // Muestra un double con 2 decimales y punto (no coma)
     static String f2(double x) {
         return String.format(Locale.US, "%.2f", x);
     }
 
     public static void main(String[] args) {
 
-        // ---------------------------------------------------------------------
-        // 1. SELECCIÓN — filter
-        // Lambda: Predicate<Producto>  (Producto -> boolean)
-        // ---------------------------------------------------------------------
+        // 1. SELECCIÓN (filter)
         System.out.println("=== 1. SELECCION (filter) ===");
         List<Producto> stockBajo = productos.stream()
             .filter(p -> p.stock() < 10)
             .toList();
         stockBajo.forEach(p -> System.out.println("  - " + p.nombre() + " (" + p.stock() + " u.)"));
 
-        // ---------------------------------------------------------------------
-        // 2. TRANSFORMACIÓN — map
-        // Lambda: Function<Producto, String>
-        // ---------------------------------------------------------------------
+        // 2. TRANSFORMACIÓN (map)
         System.out.println("=== 2. TRANSFORMACION (map) ===");
         List<String> conDescuento = productos.stream()
             .map(p -> p.nombre() + ": " + f2(p.precio()) + " -> " + f2(p.precio() * 0.8))
             .toList();
         conDescuento.forEach(linea -> System.out.println("  " + linea));
 
-        // ---------------------------------------------------------------------
-        // 3. VALIDACIÓN — anyMatch (exists) / allMatch (forall)
-        // Lambda: Predicate<Producto>
-        // ---------------------------------------------------------------------
+        // 3. VALIDACIÓN: en Java exists = anyMatch, forall = allMatch
         System.out.println("=== 3. VALIDACION (exists / forall) ===");
         boolean hayAgotados    = productos.stream().anyMatch(p -> p.stock() == 0);
         boolean preciosValidos = productos.stream().allMatch(p -> p.precio() > 0);
@@ -77,64 +63,46 @@ public class TiposDeProblemas {
         System.out.println("  Todos tienen precio > 0?           " + preciosValidos);
         System.out.println("  Hay algun producto de Hogar > 200? " + hogarCaro);
 
-        // ---------------------------------------------------------------------
-        // 4. CONTEO — filter + count  (Streams no tiene count(predicado))
-        // Lambda: Predicate<Producto>
-        // ---------------------------------------------------------------------
+        // 4. CONTEO: count() no recibe lambda, por eso primero se filtra
         System.out.println("=== 4. CONTEO (count) ===");
         long tecnoCaros = productos.stream()
             .filter(p -> p.categoria().equals("Tecnologia") && p.precio() > 50)
             .count();
         System.out.println("  Productos de Tecnologia con precio > 50: " + tecnoCaros);
 
-        // ---------------------------------------------------------------------
-        // 5. EXTREMOS — max / min con un Comparator construido desde una lambda
-        // Lambda: ToDoubleFunction<Producto>  (Producto -> double)
-        // ---------------------------------------------------------------------
+        // 5. EXTREMOS: max/min reciben una lambda de DOS productos que los compara
         System.out.println("=== 5. EXTREMOS (maxBy / minBy) ===");
         Producto mayorInventario = productos.stream()
-            .max(Comparator.comparingDouble(p -> p.precio() * p.stock()))
-            .orElseThrow();
+            .max((a, b) -> Double.compare(a.precio() * a.stock(), b.precio() * b.stock()))
+            .get();
         Producto masBarato = productos.stream()
-            .min(Comparator.comparingDouble(p -> p.precio()))
-            .orElseThrow();
+            .min((a, b) -> Double.compare(a.precio(), b.precio()))
+            .get();
         System.out.println("  Mayor valor en inventario: " + mayorInventario.nombre()
             + " (" + f2(mayorInventario.precio() * mayorInventario.stock()) + ")");
         System.out.println("  Producto mas barato:       " + masBarato.nombre()
             + " (" + f2(masBarato.precio()) + ")");
 
-        // ---------------------------------------------------------------------
-        // 6. APLANAMIENTO — flatMap
-        // Lambda: Function<Producto, Stream<String>>  (debe devolver un Stream)
-        // ---------------------------------------------------------------------
+        // 6. APLANAMIENTO (flatMap): la lambda debe devolver un Stream
         System.out.println("=== 6. APLANAMIENTO (flatMap) ===");
         List<String> palabras = productos.stream()
-            .flatMap(p -> List.of(p.nombre().toLowerCase().split(" ")).stream())
+            .flatMap(p -> Arrays.stream(p.nombre().toLowerCase().split(" ")))
             .toList();
         System.out.println("  Total de palabras: " + palabras.size());
         System.out.println("  " + String.join(", ", palabras));
 
-        // ---------------------------------------------------------------------
-        // 7. ACUMULACIÓN — reduce (foldLeft) / scanLeft "a mano"
-        // reduce(identidad, acumulador, combinador):
-        //   acumulador  -> BiFunction<Double, Producto, Double>
-        //   combinador  -> BinaryOperator<Double> (solo se usa en paralelo)
-        // ---------------------------------------------------------------------
+        // 7. ACUMULACIÓN: reduce hace lo mismo que foldLeft
         System.out.println("=== 7. ACUMULACION (foldLeft / scanLeft) ===");
-        double total = productos.stream()
-            .reduce(0.0, (acc, p) -> acc + p.precio() * p.stock(), Double::sum);
+        List<Double> valores = productos.stream()
+            .map(p -> p.precio() * p.stock())
+            .toList();
+        double total = valores.stream().reduce(0.0, (acc, v) -> acc + v);
         System.out.println("  Valor total del inventario: " + f2(total));
 
-        // Java Streams NO tiene scanLeft. Se simula con collect(): la lambda
-        // acumuladora agrega a la lista el último total + el valor del producto.
-        // (Válido para streams secuenciales; en paralelo el combinador no
-        // reconstruiría correctamente los acumulados.)
-        List<Double> evolucion = productos.stream()
-            .map(p -> p.precio() * p.stock())
-            .collect(
-                () -> new ArrayList<>(List.of(0.0)),
-                (lista, v) -> lista.add(lista.get(lista.size() - 1) + v),
-                ArrayList::addAll);
+        // Java NO tiene scanLeft: para cada posición i se suman los primeros i valores
+        List<Double> evolucion = IntStream.rangeClosed(0, valores.size())
+            .mapToObj(i -> valores.subList(0, i).stream().reduce(0.0, (acc, v) -> acc + v))
+            .toList();
         System.out.println("  Evolucion: "
             + evolucion.stream().map(v -> f2(v)).collect(Collectors.joining(", ")));
     }
