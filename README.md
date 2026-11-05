@@ -56,7 +56,7 @@ Cada archivo funciona solo: ya trae la `case class Producto` y la lista de produ
 | `python/tipos_de_problemas.py` | Python 3.8 o superior | `python python/tipos_de_problemas.py` |
 | `operaciones/OperacionesNuevas.sc` | Scala 3 | En IntelliJ: abrir el worksheet y pulsar el botón de ejecutar (*Evaluate Worksheet*). En consola: `scala-cli run operaciones/OperacionesNuevas.sc` |
 
-> Las tres versiones de la Parte 3 muestran **exactamente la misma salida**. Para eso, los precios se imprimen con 2 decimales y con punto (no coma), y en Python `True/False` se pasa a minúsculas.
+> Las tres versiones de la Parte 3 dan **los mismos resultados**. Solo cambia cómo se muestran: el worksheet de Scala muestra cada `val` con su tipo, y Java y Python imprimen cada resultado con su nombre.
 
 <a id="datos"></a>
 ## Datos usados en todos los ejemplos
@@ -213,7 +213,9 @@ La lambda no recibe `iva` como parámetro: lo "toma" de afuera y lo recuerda. Co
 <a id="parte-3"></a>
 ## Parte 3. Aplicar: ¿en qué problemas sirven las funciones anónimas?
 
-Se resolvieron **los 7 tipos de problemas** con la lista de [productos](#datos). El código completo está en [`scala/TiposDeProblemas.sc`](scala/TiposDeProblemas.sc), [`java/TiposDeProblemas.java`](java/TiposDeProblemas.java) y [`python/tipos_de_problemas.py`](python/tipos_de_problemas.py). Aquí se muestra solo la parte principal de cada solución.
+Se resolvieron **los 7 tipos de problemas** con la lista de [productos](#datos). El código completo está en [`scala/TiposDeProblemas.sc`](scala/TiposDeProblemas.sc), [`java/TiposDeProblemas.java`](java/TiposDeProblemas.java) y [`python/tipos_de_problemas.py`](python/tipos_de_problemas.py). Aquí se muestra la línea principal de cada solución y el resultado.
+
+En Scala no se usa `println`: en el worksheet basta con guardar el resultado en un `val` y IntelliJ muestra su valor a la derecha. En Java y Python sí hace falta imprimir.
 
 <a id="p3-catalogo"></a>
 ### 3.1 Catálogo de tipos de problemas
@@ -239,31 +241,26 @@ Capturas de la ejecución completa: [Scala](img/parte3_scala_completa.png) | [Ja
 
 ```scala
 // Scala
-val stockBajo = productos.filter(p => p.stock < 10)
+val stockBajo = productos.filter(p => p.stock < 10).map(p => p.nombre)
 ```
 
 ```java
 // Java
-List<Producto> stockBajo = productos.stream()
+List<String> stockBajo = productos.stream()
     .filter(p -> p.stock() < 10)
+    .map(p -> p.nombre())
     .toList();
 ```
 
 ```python
 # Python
-stock_bajo = list(filter(lambda p: p.stock < 10, productos))
+stock_bajo = list(map(lambda p: p.nombre, filter(lambda p: p.stock < 10, productos)))
 ```
 
-**Salida (igual en los tres lenguajes):**
+**Resultado en el worksheet de Scala:**
 
 ```
-=== 1. SELECCION (filter) ===
-  - Laptop Gamer X15 (5 u.)
-  - Audifonos Bluetooth (0 u.)
-  - Chocolate Amargo 70 (0 u.)
-  - Silla Ergonomica (7 u.)
-  - Cafetera Espresso (4 u.)
-  - Zapatos Deportivos (0 u.)
+val stockBajo: List[String] = List(Laptop Gamer X15, Audifonos Bluetooth, Chocolate Amargo 70, Silla Ergonomica, Cafetera Espresso, Zapatos Deportivos)
 ```
 
 ![Selección en Scala, Java y Python](img/p3_1_seleccion.png)
@@ -273,45 +270,29 @@ stock_bajo = list(filter(lambda p: p.stock < 10, productos))
 <a id="p3-transformacion"></a>
 ### 2. Transformación: `map`
 
-**Situación real:** en *Black Friday* todo tiene **20 % de descuento** y la página web debe mostrar el precio normal y el precio final de cada producto.
+**Situación real:** la tienda hace una **liquidación con 50 % de descuento** y necesita el nuevo precio de cada producto.
 
 ```scala
-// Scala
-val conDescuento = productos.map(p => s"${p.nombre}: ${f2(p.precio)} -> ${f2(p.precio * 0.8)}")
+// Scala: cada producto se convierte en una tupla (nombre, precio con descuento)
+val conDescuento = productos.map(p => (p.nombre, p.precio * 0.5))
 ```
 
 ```java
 // Java
 List<String> conDescuento = productos.stream()
-    .map(p -> p.nombre() + ": " + f2(p.precio()) + " -> " + f2(p.precio() * 0.8))
+    .map(p -> p.nombre() + ": " + p.precio() * 0.5)
     .toList();
 ```
 
 ```python
 # Python
-con_descuento = list(map(lambda p: f"{p.nombre}: {f2(p.precio)} -> {f2(p.precio * 0.8)}", productos))
+con_descuento = list(map(lambda p: (p.nombre, p.precio * 0.5), productos))
 ```
 
-(`f2` es una función auxiliar que muestra el número con 2 decimales.)
-
-**Salida (igual en los tres lenguajes):**
+**Resultado en el worksheet de Scala:**
 
 ```
-=== 2. TRANSFORMACION (map) ===
-  Laptop Gamer X15: 1250.00 -> 1000.00
-  Mouse Inalambrico: 18.50 -> 14.80
-  Monitor Curvo 27: 289.99 -> 231.99
-  Audifonos Bluetooth: 45.90 -> 36.72
-  Teclado Mecanico: 75.00 -> 60.00
-  Arroz Integral 2kg: 3.80 -> 3.04
-  Cafe Molido Loja: 7.25 -> 5.80
-  Chocolate Amargo 70: 2.90 -> 2.32
-  Silla Ergonomica: 159.00 -> 127.20
-  Lampara LED Escritorio: 24.99 -> 19.99
-  Cafetera Espresso: 135.50 -> 108.40
-  Camiseta Algodon: 12.00 -> 9.60
-  Chaqueta Impermeable: 64.90 -> 51.92
-  Zapatos Deportivos: 89.99 -> 71.99
+val conDescuento: List[(String, Double)] = List((Laptop Gamer X15,625.0), (Mouse Inalambrico,9.25), (Monitor Curvo 27,144.995), (Audifonos Bluetooth,22.95), (Teclado Mecanico,37.5), (Arroz Integral 2kg,1.9), (Cafe Molido Loja,3.625), (Chocolate Amargo 70,1.45), (Silla Ergonomica,79.5), (Lampara LED Escritorio,12.495), (Cafetera Espresso,67.75), (Camiseta Algodon,6.0), (Chaqueta Impermeable,32.45), (Zapatos Deportivos,44.995))
 ```
 
 ![Transformación en Scala, Java y Python](img/p3_2_transformacion.png)
@@ -325,32 +306,31 @@ con_descuento = list(map(lambda p: f"{p.nombre}: {f2(p.precio)} -> {f2(p.precio 
 
 ```scala
 // Scala
-val hayAgotados    = productos.exists(p => p.stock == 0)
+val hayAgotados = productos.exists(p => p.stock == 0)
 val preciosValidos = productos.forall(p => p.precio > 0)
-val hogarCaro      = productos.exists(p => p.categoria == "Hogar" && p.precio > 200)
+val hogarCaro = productos.exists(p => p.categoria == "Hogar" && p.precio > 200)
 ```
 
 ```java
 // Java
-boolean hayAgotados    = productos.stream().anyMatch(p -> p.stock() == 0);
+boolean hayAgotados = productos.stream().anyMatch(p -> p.stock() == 0);
 boolean preciosValidos = productos.stream().allMatch(p -> p.precio() > 0);
-boolean hogarCaro      = productos.stream().anyMatch(p -> p.categoria().equals("Hogar") && p.precio() > 200);
+boolean hogarCaro = productos.stream().anyMatch(p -> p.categoria().equals("Hogar") && p.precio() > 200);
 ```
 
 ```python
 # Python
-hay_agotados    = any(map(lambda p: p.stock == 0, productos))
+hay_agotados = any(map(lambda p: p.stock == 0, productos))
 precios_validos = all(map(lambda p: p.precio > 0, productos))
-hogar_caro      = any(map(lambda p: p.categoria == "Hogar" and p.precio > 200, productos))
+hogar_caro = any(map(lambda p: p.categoria == "Hogar" and p.precio > 200, productos))
 ```
 
-**Salida (igual en los tres lenguajes):**
+**Resultado en el worksheet de Scala:**
 
 ```
-=== 3. VALIDACION (exists / forall) ===
-  Hay algun producto agotado?        true
-  Todos tienen precio > 0?           true
-  Hay algun producto de Hogar > 200? false
+val hayAgotados: Boolean = true
+val preciosValidos: Boolean = true
+val hogarCaro: Boolean = false
 ```
 
 ![Validación en Scala, Java y Python](img/p3_3_validacion.png)
@@ -379,11 +359,10 @@ long tecnoCaros = productos.stream()
 tecno_caros = len(list(filter(lambda p: p.categoria == "Tecnologia" and p.precio > 50, productos)))
 ```
 
-**Salida (igual en los tres lenguajes):**
+**Resultado en el worksheet de Scala:**
 
 ```
-=== 4. CONTEO (count) ===
-  Productos de Tecnologia con precio > 50: 3
+val tecnoCaros: Int = 3
 ```
 
 ![Conteo en Scala, Java y Python](img/p3_4_conteo.png)
@@ -397,32 +376,31 @@ tecno_caros = len(list(filter(lambda p: p.categoria == "Tecnologia" and p.precio
 
 ```scala
 // Scala
-val mayorInventario = productos.maxBy(p => p.precio * p.stock)
-val masBarato       = productos.minBy(p => p.precio)
+val mayorInventario = productos.maxBy(p => p.precio * p.stock).nombre
+val masBarato = productos.minBy(p => p.precio).nombre
 ```
 
 ```java
-// Java: max/min reciben una lambda que compara DOS productos
-Producto mayorInventario = productos.stream()
+// Java: max y min reciben una lambda que compara DOS productos
+String mayorInventario = productos.stream()
     .max((a, b) -> Double.compare(a.precio() * a.stock(), b.precio() * b.stock()))
-    .get();
-Producto masBarato = productos.stream()
+    .get().nombre();
+String masBarato = productos.stream()
     .min((a, b) -> Double.compare(a.precio(), b.precio()))
-    .get();
+    .get().nombre();
 ```
 
 ```python
 # Python: key= recibe la lambda con el criterio
-mayor_inventario = max(productos, key=lambda p: p.precio * p.stock)
-mas_barato       = min(productos, key=lambda p: p.precio)
+mayor_inventario = max(productos, key=lambda p: p.precio * p.stock).nombre
+mas_barato = min(productos, key=lambda p: p.precio).nombre
 ```
 
-**Salida (igual en los tres lenguajes):**
+**Resultado en el worksheet de Scala:**
 
 ```
-=== 5. EXTREMOS (maxBy / minBy) ===
-  Mayor valor en inventario: Laptop Gamer X15 (6250.00)
-  Producto mas barato:       Chocolate Amargo 70 (2.90)
+val mayorInventario: String = Laptop Gamer X15
+val masBarato: String = Chocolate Amargo 70
 ```
 
 ![Extremos en Scala, Java y Python](img/p3_5_extremos.png)
@@ -437,6 +415,7 @@ mas_barato       = min(productos, key=lambda p: p.precio)
 ```scala
 // Scala
 val palabras = productos.flatMap(p => p.nombre.toLowerCase.split(" "))
+val totalPalabras = palabras.size
 ```
 
 ```java
@@ -451,12 +430,11 @@ List<String> palabras = productos.stream()
 palabras = reduce(lambda acc, p: acc + p.nombre.lower().split(" "), productos, [])
 ```
 
-**Salida (igual en los tres lenguajes):**
+**Resultado en el worksheet de Scala:**
 
 ```
-=== 6. APLANAMIENTO (flatMap) ===
-  Total de palabras: 34
-  laptop, gamer, x15, mouse, inalambrico, monitor, curvo, 27, audifonos, bluetooth, teclado, mecanico, arroz, integral, 2kg, cafe, molido, loja, chocolate, amargo, 70, silla, ergonomica, lampara, led, escritorio, cafetera, espresso, camiseta, algodon, chaqueta, impermeable, zapatos, deportivos
+val palabras: List[String] = List(laptop, gamer, x15, mouse, inalambrico, monitor, curvo, 27, audifonos, bluetooth, teclado, mecanico, arroz, integral, 2kg, cafe, molido, loja, chocolate, amargo, 70, silla, ergonomica, lampara, led, escritorio, cafetera, espresso, camiseta, algodon, chaqueta, impermeable, zapatos, deportivos)
+val totalPalabras: Int = 34
 ```
 
 Si se usara `map` en vez de `flatMap`, el resultado sería una lista de 14 listas. `flatMap` hace el `map` y además aplana (como `map` + `flatten`).
@@ -468,40 +446,40 @@ Si se usara `map` en vez de `flatMap`, el resultado sería una lista de 14 lista
 <a id="p3-acumulacion"></a>
 ### 7. Acumulación: `foldLeft` / `scanLeft`
 
-**Situación real:** contabilidad necesita el **valor total del inventario** (suma de precio x stock) y también quiere ver **cómo va creciendo ese total** producto por producto.
+**Situación real:** el encargado de bodega necesita el **total de unidades** que hay en bodega y también quiere ver **cómo va creciendo ese total** producto por producto (como el saldo de una cuenta en la clase B1S4).
 
 ```scala
 // Scala
-val total     = productos.foldLeft(0.0)((acc, p) => acc + p.precio * p.stock)
-val evolucion = productos.scanLeft(0.0)((acc, p) => acc + p.precio * p.stock)
+val totalUnidades = productos.foldLeft(0)((acc, p) => acc + p.stock)
+val evolucion = productos.scanLeft(0)((acc, p) => acc + p.stock)
 ```
 
 ```java
 // Java: reduce hace lo mismo que foldLeft
-List<Double> valores = productos.stream().map(p -> p.precio() * p.stock()).toList();
-double total = valores.stream().reduce(0.0, (acc, v) -> acc + v);
+int totalUnidades = productos.stream()
+    .map(p -> p.stock())
+    .reduce(0, (acc, s) -> acc + s);
 
-// Java no tiene scanLeft: para cada posición i se suman los primeros i valores
-List<Double> evolucion = IntStream.rangeClosed(0, valores.size())
-    .mapToObj(i -> valores.subList(0, i).stream().reduce(0.0, (acc, v) -> acc + v))
+// Java no tiene scanLeft: para cada posición i se suman las unidades de los primeros i productos
+List<Integer> evolucion = IntStream.rangeClosed(0, productos.size())
+    .mapToObj(i -> productos.subList(0, i).stream().map(p -> p.stock()).reduce(0, (acc, s) -> acc + s))
     .toList();
 ```
 
 ```python
 # Python: reduce = foldLeft, accumulate = scanLeft
-total     = reduce(lambda acc, p: acc + p.precio * p.stock, productos, 0.0)
-evolucion = list(accumulate(productos, lambda acc, p: acc + p.precio * p.stock, initial=0.0))
+total_unidades = reduce(lambda acc, p: acc + p.stock, productos, 0)
+evolucion = list(accumulate(productos, lambda acc, p: acc + p.stock, initial=0))
 ```
 
-**Salida (igual en los tres lenguajes):**
+**Resultado en el worksheet de Scala:**
 
 ```
-=== 7. ACUMULACION (foldLeft / scanLeft) ===
-  Valor total del inventario: 16989.08
-  Evolucion: 0.00, 6250.00, 6990.00, 10469.88, 10469.88, 11819.88, 12275.88, 12710.88, 12710.88, 13823.88, 14573.58, 15115.58, 16015.58, 16989.08, 16989.08
+val totalUnidades: Int = 386
+val evolucion: List[Int] = List(0, 5, 45, 57, 57, 75, 195, 255, 255, 262, 292, 296, 371, 386, 386)
 ```
 
-El último número de `scanLeft` es igual al resultado de `foldLeft`. Los números repetidos son de productos agotados, que suman 0.
+El último número de `scanLeft` es igual al resultado de `foldLeft` (386). Los números repetidos son de productos agotados, que suman 0.
 
 ![Acumulación en Scala, Java y Python](img/p3_7_acumulacion.png)
 
@@ -529,15 +507,10 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
 2. **Qué lambda recibe:** una que devuelve la **clave** para ordenar: `p => p.precio`. Con el signo menos (`p => -p.precio`) se ordena de mayor a menor.
 3. **Ejemplo:**
    ```scala
-   val porPrecio = productos.sortBy(p => -p.precio)
-   porPrecio.take(5)   // los 5 más caros
+   val top5Caros = productos.sortBy(p => -p.precio).take(5).map(p => p.nombre)
    ```
    ```
-   1250.00  Laptop Gamer X15
-   289.99  Monitor Curvo 27
-   159.00  Silla Ergonomica
-   135.50  Cafetera Espresso
-   89.99  Zapatos Deportivos
+   val top5Caros: List[String] = List(Laptop Gamer X15, Monitor Curvo 27, Silla Ergonomica, Cafetera Espresso, Zapatos Deportivos)
    ```
 4. **Qué problema resuelve:** mostrar productos "de mayor a menor precio" o hacer un top 5. Se parece a [Extremos](#p3-extremos): `maxBy` da solo el mayor y `sortBy` ordena toda la lista.
 
@@ -548,29 +521,26 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
 3. **Ejemplo:**
    ```scala
    val porCategoria = productos.groupBy(p => p.categoria)
-   porCategoria.toList.sortBy(g => g._1)
-     .foreach(g => println(s"${g._1}: ${g._2.size} productos"))
+   val cantidadPorCategoria = porCategoria.map(g => (g._1, g._2.size))
    ```
    ```
-   Alimentos: 3 productos
-   Hogar: 3 productos
-   Ropa: 3 productos
-   Tecnologia: 5 productos
+   val cantidadPorCategoria: Map[String, Int] = HashMap(Tecnologia -> 5, Hogar -> 3, Alimentos -> 3, Ropa -> 3)
    ```
 4. **Qué problema resuelve:** reportes por categoría, por mes o por ciudad. Es un tipo de problema nuevo (**Agrupación**) que no estaba en la tabla de la Parte 3.
 
 #### Ficha 3: `partition`
 
 1. **Qué hace:** divide la lista en dos: los que cumplen la condición y los que no.
-2. **Qué lambda recibe:** una condición (devuelve `Boolean`): `p => p.stock > 0`. Devuelve una **tupla** `(cumplen, noCumplen)` que se puede separar en dos `val`, como se vio en clase con `val (menor, mayor) = ...`.
+2. **Qué lambda recibe:** una condición (devuelve `Boolean`): `p => p.stock > 0`. Devuelve una **tupla** `(cumplen, noCumplen)` que se puede separar en dos `val` de una vez.
 3. **Ejemplo:**
    ```scala
    val (disponibles, agotados) = productos.partition(p => p.stock > 0)
+   val nombresAgotados = agotados.map(p => p.nombre)
    ```
    ```
-   Disponibles: 11
-   Agotados: Audifonos Bluetooth, Chocolate Amargo 70, Zapatos Deportivos
+   val nombresAgotados: List[String] = List(Audifonos Bluetooth, Chocolate Amargo 70, Zapatos Deportivos)
    ```
+   La lista `disponibles` tiene los otros 11 productos.
 4. **Qué problema resuelve:** separar aprobados y reprobados, pagos aceptados y rechazados, etc. Es como [Selección](#p3-seleccion) (`filter`), pero sin perder los que no cumplen.
 
 #### Ficha 4: `find`
@@ -580,11 +550,11 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
 3. **Ejemplo:**
    ```scala
    val ropaBarata = productos.find(p => p.categoria == "Ropa" && p.precio < 20)
-   val hogarCaro  = productos.find(p => p.categoria == "Hogar" && p.precio > 200)
+   val hogarCaro = productos.find(p => p.categoria == "Hogar" && p.precio > 200)
    ```
    ```
-   Primera prenda de menos de $20: Some(Camiseta Algodon)
-   Primer producto de Hogar de mas de $200: None
+   val ropaBarata: Option[Producto] = Some(Producto(Camiseta Algodon,Ropa,12.0,75))
+   val hogarCaro: Option[Producto] = None
    ```
 4. **Qué problema resuelve:** buscar un cliente por su cédula o un producto por su código. Se parece a [Validación](#p3-validacion): `exists` solo dice *si hay* uno, mientras que `find` dice *cuál es*.
 
@@ -595,33 +565,30 @@ Captura de la ejecución de la Parte 4:
 <a id="p4-combinacion"></a>
 ### 4.3 Combinar operaciones
 
-**Pregunta:** *¿qué categoría tiene más dinero en bodega (precio x stock)?*
+**Pregunta:** *¿qué categoría tiene más unidades en bodega?*
 
 ```scala
 val ranking = productos
-  .groupBy(p => p.categoria)                                               // nueva
+  .groupBy(p => p.categoria)
   .toList
-  .map(g => (g._1, g._2.foldLeft(0.0)((acc, p) => acc + p.precio * p.stock)))  // vistas en clase
-  .sortBy(t => -t._2)                                                      // nueva
+  .map(g => (g._1, g._2.foldLeft(0)((acc, p) => acc + p.stock)))
+  .sortBy(t => -t._2)
 ```
 
-**Salida:**
+**Resultado en el worksheet de Scala:**
 
 ```
-Tecnologia: 11819.88
-Hogar: 2404.70
-Ropa: 1873.50
-Alimentos: 891.00
+val ranking: List[(String, Int)] = List((Alimentos,180), (Ropa,90), (Tecnologia,75), (Hogar,41))
 ```
 
 **Qué hace cada paso:**
 
 1. **`groupBy` (nueva):** junta los productos por categoría (4 grupos).
 2. **`toList`:** convierte el `Map` en una lista de tuplas `(categoria, productos)` para poder ordenarla.
-3. **`map` + `foldLeft` (vistas en clase):** cada tupla se convierte en `(categoria, valor total)`. `foldLeft` suma precio x stock de los productos de ese grupo.
-4. **`sortBy` (nueva):** ordena por el valor total (`t._2`) de mayor a menor, gracias al signo menos.
+3. **`map` + `foldLeft` (vistas en clase):** cada tupla se convierte en `(categoria, total de unidades)`. `foldLeft` suma el `stock` de los productos de ese grupo.
+4. **`sortBy` (nueva):** ordena por el total (`t._2`) de mayor a menor, gracias al signo menos.
 
-Resultado: Tecnología es la categoría con más dinero en bodega. Se usaron **dos operaciones nuevas** (`groupBy`, `sortBy`) y **dos vistas en clase** (`map`, `foldLeft`).
+Resultado: Alimentos es la categoría con más unidades en bodega (180). Se usaron **dos operaciones nuevas** (`groupBy`, `sortBy`) y **dos vistas en clase** (`map`, `foldLeft`).
 
 ---
 
@@ -659,7 +626,7 @@ Esto es justamente lo que aprovecha **[Apache Spark](#caso-spark)**: como las la
 
 1. Apache Software Foundation. *Quick Start, Spark Documentation*. https://spark.apache.org/docs/latest/quick-start.html
 2. Eriksen, M. *Effective Scala*. Twitter. https://twitter.github.io/effectivescala/
-3. Quiñones, S. *B1S2 Funciones*, *B1S3 Funciones de orden superior* y *B1S4 Estructuras de datos* [Diapositivas de clase]. UTPL. https://slides.com/lsantiago
+3. Diapositivas de clase de la asignatura: *B1S1 Paradigmas de programación*, *B1S2 Funciones*, *B1S3 Funciones de orden superior* y *B1S4 Estructuras de datos*. https://slides.com/lsantiago
 4. Documentación oficial de Scala 3. https://docs.scala-lang.org
 5. Oracle. *Lambda Expressions, The Java Tutorials*. https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html
 6. Python Software Foundation. *Functional Programming HOWTO*. https://docs.python.org/3/howto/functional.html
