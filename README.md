@@ -664,4 +664,4 @@ Esto es justamente lo que aprovecha **[Apache Spark](#caso-spark)**: como las la
 6. Python Software Foundation. *Functional Programming HOWTO*. https://docs.python.org/3/howto/functional.html
 7. Alama, J. y Korbmacher, J. *The Lambda Calculus*. Stanford Encyclopedia of Philosophy. https://plato.stanford.edu/entries/lambda-calculus/
 8. Winitzki, S. (2024). *The Science of Functional Programming*. https://github.com/winitzki/sofp
-9. **Uso de herramientas de IA:** se utilizó Claude (Anthropic) como apoyo para organizar el repositorio, redactar borradores del README, revisar el código de ejemplo y generar las capturas de ejecución. El contenido fue revisado, ejecutado y ajustado por el autor.
+9. **Uso de herramientas de IA:** Utilice Claude como apoyo para organizar el repositorio y redactar borradores del README y revisar el código de ejemplo. El contenido fue revisado, ejecutado y ajustado por el autor.
