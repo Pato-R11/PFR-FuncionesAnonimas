@@ -41,7 +41,7 @@ PFR-FuncionesAnonimas/
 │   └── tipos_de_problemas.py       <- Parte 3: los 7 tipos de problemas en Python
 ├── operaciones/
 │   └── OperacionesNuevas.sc        <- Parte 4: sortBy, groupBy, partition, find (worksheet)
-└── img/                            <- capturas de ejecución
+└── img/                            <- capturas de ejecución (incluye las de IntelliJ)
 ```
 
 <a id="ejecutar"></a>
@@ -231,6 +231,10 @@ En Scala no se usa `println`: en el worksheet basta con guardar el resultado en 
 | 7 | [Acumulación](#p3-acumulacion) | ¿Qué valor resume toda la lista? | `foldLeft`, `scanLeft` | `reduce` | `reduce`, `accumulate` |
 
 Capturas de la ejecución completa: [Scala](img/parte3_scala_completa.png) | [Java](img/parte3_java_completa.png) | [Python](img/parte3_python_completa.png).
+
+**Ejecución del worksheet en IntelliJ** (`TiposDeProblemas.sc`): a la derecha se ve el resultado de cada `val`.
+
+![Worksheet de la Parte 3 ejecutado en IntelliJ](img/intellij_parte3_tiposdeproblemas.png)
 
 ---
 
@@ -561,6 +565,10 @@ Código: [`operaciones/OperacionesNuevas.sc`](operaciones/OperacionesNuevas.sc),
 Captura de la ejecución de la Parte 4:
 
 ![Parte 4 en Scala](img/parte4_operaciones.png)
+
+**Ejecución del worksheet en IntelliJ** (`OperacionesNuevas.sc`):
+
+![Worksheet de la Parte 4 ejecutado en IntelliJ](img/intellij_parte4_operaciones.png)
 
 <a id="p4-combinacion"></a>
 ### 4.3 Combinar operaciones
